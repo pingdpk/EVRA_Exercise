@@ -19,6 +19,6 @@ public class SimulationCommandController {
 
     @PostMapping
     public RestCommandResponse command(@Valid @RequestBody RestCommandRequest request) {
-        return null; // Command Response from service TODO
+        return RestCommandResponse.from(chargingCommandService.handle(request.toCommand()));
     }
 }

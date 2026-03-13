@@ -20,26 +20,28 @@ public class QueryController {
 
     @GetMapping("/sessions")
     public List<SessionView> sessions() {
-        return null; // sessions through srevice TODO
+        return chargingQueryService.listSessions();
     }
 
     @GetMapping("/sessions/{transactionId}")
     public SessionView session(@PathVariable String transactionId) {
-        return null; // through service // TODO
+        return chargingQueryService.getSession(transactionId);
     }
 
     @GetMapping("/sessions/{transactionId}/events")
-    public List events(@PathVariable String transactionId) {
-        return null;//service TODO
+    public List<EventEnvelopeResponse> events(@PathVariable String transactionId) {
+        return chargingQueryService.getSessionEvents(transactionId).stream()
+                .map(EventEnvelopeResponse::from)
+                .toList();
     }
 
     @GetMapping("/chargers")
     public List<ChargerStatsView> chargers() {
-        return null; //all chanrgers TODO
+        return chargingQueryService.listChargers();
     }
 
     @GetMapping("/chargers/{chargerId}/stats")
     public ChargerStatsView chargerStats(@PathVariable String chargerId) {
-        return null; //with id TODO
+        return chargingQueryService.getChargerStats(chargerId);
     }
 }

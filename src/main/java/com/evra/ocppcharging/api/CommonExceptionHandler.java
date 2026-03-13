@@ -1,5 +1,6 @@
 package com.evra.ocppcharging.api;
 
+import com.evra.ocppcharging.domain.exception.DomainException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -11,6 +12,8 @@ import java.util.NoSuchElementException;
 
 @RestControllerAdvice
 public class CommonExceptionHandler {
+
+    @ExceptionHandler({DomainException.class, IllegalArgumentException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, Object> handleBadRequest(RuntimeException exception) {
         return Map.of(
@@ -34,12 +37,12 @@ public class CommonExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Map<String, Object> handleUnexpected(Exception exception) {
+    public Map<String, Object> handleUnexpected(Exception e) {
         return Map.of(
                 "timestamp", Instant.now().toString(),
                 "status", 500,
                 "error", "Internal Server Error",
-                "message", exception.getMessage()
+                "message", e.getMessage()
         );
     }
 }

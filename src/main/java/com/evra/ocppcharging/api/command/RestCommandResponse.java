@@ -1,5 +1,7 @@
 package com.evra.ocppcharging.api.command;
 
+import com.evra.ocppcharging.infrastructure.idempotency.CommandResult;
+
 public class RestCommandResponse {
 
     private final String eventId;
@@ -12,6 +14,9 @@ public class RestCommandResponse {
         this.message = message;
     }
 
+    public static RestCommandResponse from(CommandResult result) {
+        return new RestCommandResponse(result.getEventId(), result.getStatus(), result.getMessage());
+    }
 
     public String getEventId() {
         return eventId;

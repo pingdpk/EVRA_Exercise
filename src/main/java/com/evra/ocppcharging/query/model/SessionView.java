@@ -1,5 +1,6 @@
 package com.evra.ocppcharging.query.model;
 
+import com.evra.ocppcharging.domain.model.SessionStatus;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -14,12 +15,14 @@ public class SessionView {
     private long totalEnergyConsumedWh;
     private Instant startTime;
     private Instant endTime;
+    private SessionStatus status;
     private final List<String> anomalies;
     private int eventCount;
 
     public SessionView(String transactionId, String chargerId) {
         this.transactionId = transactionId;
         this.chargerId = chargerId;
+        this.status = SessionStatus.NONE;
         this.anomalies = new ArrayList<>();
     }
 
@@ -69,6 +72,14 @@ public class SessionView {
 
     public void setEndTime(Instant endTime) {
         this.endTime = endTime;
+    }
+
+    public SessionStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(SessionStatus status) {
+        this.status = status;
     }
 
     public List<String> getAnomalies() {

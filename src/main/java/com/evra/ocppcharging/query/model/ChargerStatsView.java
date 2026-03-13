@@ -1,10 +1,13 @@
 package com.evra.ocppcharging.query.model;
 
+import com.evra.ocppcharging.domain.model.ChargerStatus;
+
 import java.time.Instant;
 
 public class ChargerStatsView {
 
     private final String chargerId;
+    private ChargerStatus status = ChargerStatus.UNKNOWN;
     private boolean online;
     private String activeTransactionId;
     private long totalEnergyConsumedWh;
@@ -18,6 +21,14 @@ public class ChargerStatsView {
 
     public String getChargerId() {
         return chargerId;
+    }
+
+    public ChargerStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ChargerStatus status) {
+        this.status = status;
     }
 
     public boolean isOnline() {

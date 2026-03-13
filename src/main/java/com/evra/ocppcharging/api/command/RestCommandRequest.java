@@ -1,5 +1,7 @@
 package com.evra.ocppcharging.api.command;
 
+import com.evra.ocppcharging.domain.lifecycle.ChargingLifeCycle;
+import com.evra.ocppcharging.domain.lifecycle.LifeCycleType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -37,8 +39,18 @@ public class RestCommandRequest {
     @JsonProperty("connector_id")
     private Integer connectorId;
 
-    public void toCommand() {
-        //return null new LifeCyCles TODO
+    public ChargingLifeCycle toCommand() {
+        return new ChargingLifeCycle(
+                chargerId,
+                LifeCycleType.valueOf(commandType.trim().toUpperCase()),
+                transactionId,
+                meterValue,
+                timestamp,
+                idempotencyKey,
+                status,
+                authorizationId,
+                connectorId
+        );
     }
 
     public String getChargerId() {
