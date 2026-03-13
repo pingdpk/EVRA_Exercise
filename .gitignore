@@ -1,13 +1,13 @@
-.idea/
-/target/
+/ocpp-charging-service/.idea/
+/ocpp-charging-service/target/
 
-.eclipse/
-.classpath
-.project
-.settings/
-*.iml
-*.ipr
-*.iws
-.vscode/
-*.swp
+/ocpp-charging-service/.eclipse/
+/ocpp-charging-service/.classpath
+/ocpp-charging-service/.project
+/ocpp-charging-service/.settings/
+/ocpp-charging-service/*.iml
+/ocpp-charging-service/*.ipr
+/ocpp-charging-service/*.iws
+/ocpp-charging-service/.vscode/
+/ocpp-charging-service/*.swp
 
