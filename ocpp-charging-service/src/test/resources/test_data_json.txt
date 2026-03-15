@@ -1,0 +1,210 @@
+
+
+WebSocket ocpp
+************************************************************************************
+ws://localhost:8080/ocpp/CHG-101
+
+
+bootNoti
+--------
+[2, "msg-boot-1", "BootNotification", {
+  "chargePointVendor": "EVRA",
+  "chargePointModel": "SIM-01"
+}]
+
+
+Authorize
+---------
+[2, "msg-auth-1", "Authorize", {
+  "idTag": "TAG-1001"
+}]
+
+
+StatusNotification
+-----------------
+req
+[2, "msg-status-1", "StatusNotification", {
+  "status": "Available",
+  "errorCode": "NoError",
+  "timestamp": "2026-03-11T19:01:00Z"
+}]
+
+other stats.. 
++++
+Preparing
+Charging
+Finishing
+Unavailable
+Faulted
+
+
+StartTransaction
+-------------------
+
+[2, "msg-start-1", "StartTransaction", {
+  "idTag": "TAG-1001",
+  "meterStart": 1200,
+  "timestamp": "2026-03-11T19:02:00Z"
+}]
+
+MeterValues
+------------
+req
+[2, "msg-meter-1", "MeterValues", {
+  "transactionId": "TX-CHG-101-1",
+  "meterValue": 1350,
+  "timestamp": "2026-03-11T19:10:00Z"
+}]
+
+
+[2, "msg-meter-2", "MeterValues", {
+  "transactionId": "TX-CHG-101-1",
+  "meterValue": 1490,
+  "timestamp": "2026-03-11T19:18:00Z"
+}]
+
+StopTransaction
+----------
+[2, "msg-stop-1", "StopTransaction", {
+  "transactionId": "TX-CHG-101-1",
+  "meterStop": 1550,
+  "timestamp": "2026-03-11T19:30:00Z"
+}]
+
+
+http
+************************************************************************************
+
+POST /commands
+---------------------
+{
+  "charger_id": "CHG-101",
+  "command_type": "StartTransaction",
+  "transaction_id": "TX-MANUAL-1",
+  "meter_value": 1000,
+  "timestamp": "2026-03-11T19:02:00Z",
+  "idempotency_key": "start-CHG-101-TX-MANUAL-1-1"
+}
+
+resp
+{
+  "event_id": "f3d7a1df-5a19-4a96-bd34-4f17f5ec1c52",
+  "status": "ACCEPTED",
+  "message": "StartTransaction accepted"
+}
+
+GET /sessions
+---------------------
+resp
+[
+  {
+    "transaction_id": "TX-CHG-101-1",
+    "charger_id": "CHG-101",
+    "status": "COMPLETED",
+    "meter_start": 1200,
+    "meter_end": 1550,
+    "total_energy_consumed_wh": 350,
+    "start_time": "2026-03-11T19:02:00Z",
+    "end_time": "2026-03-11T19:30:00Z",
+    "duration_seconds": 1680,
+    "anomalies": [],
+    "event_count": 6
+  }
+]
+
+GET /sessions/TX-CHG-101-1
+---------------------
+reso
+{
+  "transaction_id": "TX-CHG-101-1",
+  "charger_id": "CHG-101",
+  "status": "COMPLETED",
+  "meter_start": 1200,
+  "meter_end": 1550,
+  "total_energy_consumed_wh": 350,
+  "start_time": "2026-03-11T19:02:00Z",
+  "end_time": "2026-03-11T19:30:00Z",
+  "duration_seconds": 1680,
+  "anomalies": [],
+  "event_count": 6
+}
+
+
+GET /sessions/TX-CHG-101-1/events
+---------------------
+reso
+-----
+[
+  {
+    "event_id": "e1",
+    "event_type": "SessionStarted",
+    "transaction_id": "TX-CHG-101-1",
+    "charger_id": "CHG-101",
+    "timestamp": "2026-03-11T19:02:00Z",
+    "payload": {
+      "meter_start": 1200
+    }
+  },
+  {
+    "event_id": "e2",
+    "event_type": "MeterValueRecorded",
+    "transaction_id": "TX-CHG-101-1",
+    "charger_id": "CHG-101",
+    "timestamp": "2026-03-11T19:10:00Z",
+    "payload": {
+      "meter_value": 1350
+    }
+  },
+  {
+    "event_id": "e3",
+    "event_type": "MeterValueRecorded",
+    "transaction_id": "TX-CHG-101-1",
+    "charger_id": "CHG-101",
+    "timestamp": "2026-03-11T19:18:00Z",
+    "payload": {
+      "meter_value": 1490
+    }
+  },
+  {
+    "event_id": "e4",
+    "event_type": "SessionCompleted",
+    "transaction_id": "TX-CHG-101-1",
+    "charger_id": "CHG-101",
+    "timestamp": "2026-03-11T19:30:00Z",
+    "payload": {
+      "meter_stop": 1550
+    }
+  }
+]
+
+
+
+GET /chargers
+--------------
+resp
+-------
+[
+  {
+    "charger_id": "CHG-101",
+    "status": "Available",
+    "online": true,
+    "active_transaction_id": null,
+    "last_seen_at": "2026-03-11T19:30:00Z"
+  }
+]
+
+
+GET /chargers/CHG-101/stats
+---------------------
+res
+-----
+{
+  "charger_id": "CHG-101",
+  "status": "Available",
+  "online": true,
+  "active_transaction_id": null,
+  "total_energy_consumed_wh": 350,
+  "completed_sessions": 1,
+  "anomaly_count": 0,
+  "last_seen_at": "2026-03-11T19:30:00Z"
+}
