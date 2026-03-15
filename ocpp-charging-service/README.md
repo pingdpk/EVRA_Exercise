@@ -19,6 +19,8 @@ Spring Boot 3 / Java 17 charging session service
 ### Real transport layer for OCPP-style messages
 This project now includes an actual HTTP/WebSocket transport entrypoint:
 
+### Flow Architecture diagram
+![Alt text for the diagram](FlowArchitecture.jpg)
 
 ## Endpoints
 WebSocket endpoint: 
